@@ -48,5 +48,6 @@ void AEnemy::LookAtPlayer()
 void AEnemy::Fire()
 {
 	//투사체 발사
+	FRotator dir = GetActorRotation();
 }
 
