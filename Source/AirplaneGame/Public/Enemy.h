@@ -10,7 +10,9 @@ UCLASS()
 class AIRPLANEGAME_API AEnemy : public AActor
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
+		TSubclassOf<class AEnemyBullet> bulletFactory;
 public:	
 	// Sets default values for this actor's properties
 	AEnemy();
