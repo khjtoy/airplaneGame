@@ -3,12 +3,29 @@
 
 #include "Characters/AirplaneCharacter.h"
 /* 추후 여기 경로 바꾸면 변경해야 함 */
-#include "EnhancedInputSubsystems.h"
-#include "EnhancedInputComponent.h"
+#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
+#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include <GameFramework/SpringArmComponent.h>
+#include <Camera/CameraComponent.h>
 
 AAirplaneCharacter::AAirplaneCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	// TPS카메라의 부모 클래스인 SpringArm 컴포넌트 붙이기
+	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	if (springArmComp)
+	{
+		springArmComp->SetupAttachment(RootComponent);
+		springArmComp->SetRelativeLocation(FVector(0, 70, 90));
+		springArmComp->TargetArmLength = 400;
+	}
+	// 카메라 컴포넌트 붙이기
+	tpsCamComp = CreateDefaultSubobject<UCameraComponent>(TEXT("TPSCamComp"));
+	if (tpsCamComp)
+	{
+		tpsCamComp->SetupAttachment(springArmComp);
+	}
 }
 
 void AAirplaneCharacter::BeginPlay()
@@ -51,14 +68,15 @@ void AAirplaneCharacter::Tick(float DeltaTime)
 void AAirplaneCharacter::MoveForward(const FInputActionValue& Value)
 {
 	float Movement = Value.Get<float>();
-	if (Controller && (Movement != 0.f))
+	if (Controller != nullptr)
 	{
 		// find out which way is forward
-		const FRotator ControlRotation = GetControlRotation();
-		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Movement);
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		// add movement
+		AddMovementInput(ForwardDirection, Movement);
 	}
 }
 
