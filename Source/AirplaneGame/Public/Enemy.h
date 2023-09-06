@@ -13,6 +13,8 @@ class AIRPLANEGAME_API AEnemy : public AActor
 public:
 	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
 		TSubclassOf<class AEnemyBullet> bulletFactory;
+	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
+		FTransform firePos;
 public:	
 	// Sets default values for this actor's properties
 	AEnemy();

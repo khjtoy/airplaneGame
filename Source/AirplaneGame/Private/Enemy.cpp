@@ -49,8 +49,6 @@ void AEnemy::LookAtPlayer()
 void AEnemy::Fire()
 {
 	//투사체 발사
-	FVector dir = GetActorForwardVector();
-	FTransform firePos = GetActorTransform();
 	GetWorld()->SpawnActor<AEnemyBullet>(bulletFactory, firePos);
 }
 

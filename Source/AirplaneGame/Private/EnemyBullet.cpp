@@ -25,5 +25,24 @@ AEnemyBullet::AEnemyBullet()
     // 8. 외관 크기 설정
     bodyMeshComp->SetRelativeScale3D(FVector(0.25));
 
+    movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+    movementComp->SetUpdatedComponent(collisionComp);
+    movementComp->InitialSpeed = 6000.0f;
+    movementComp->MaxSpeed = 6000.0f;
+    movementComp->bRotationFollowsVelocity = true;
+    movementComp->bShouldBounce = true;
+    movementComp->Bounciness = 0.3f;
+    movementComp->ProjectileGravityScale = 0.0f;
+
+}
+
+void AEnemyBullet::Tick(float DeltaTime)
+{
+    BulletMove();
+}
+
+void AEnemyBullet::BulletMove()
+{
+    movementComp->Velocity = GetActorForwardVector();
 }
 
