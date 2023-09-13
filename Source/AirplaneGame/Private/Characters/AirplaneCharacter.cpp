@@ -3,8 +3,8 @@
 
 #include "Characters/AirplaneCharacter.h"
 /* 추후 여기 경로 바꾸면 변경해야 함 */
-#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
-#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 

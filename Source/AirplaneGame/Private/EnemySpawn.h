@@ -20,7 +20,12 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void Spawner();
 
+public:
+	UPROPERTY(EditDefaultsOnly, Category = variables)
+		float distance = 1.f;
+	UPROPERTY(EditDefaultsOnly, Category = enemy)
+		UBlueprint* enemy;
+	FTimerHandle spawnTimer;
 };

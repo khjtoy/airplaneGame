@@ -6,22 +6,27 @@
 // Sets default values
 AEnemySpawn::AEnemySpawn()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AEnemySpawn::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	GetWorldTimerManager().SetTimer(spawnTimer, this, &AEnemySpawn::Spawner, 15, true);
 }
 
-// Called every frame
-void AEnemySpawn::Tick(float DeltaTime)
+void AEnemySpawn::Spawner()
 {
-	Super::Tick(DeltaTime);
+	FVector playerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	
+	const float pitch = FMath::FRandRange(-1.f, 1.f);
+	const float yaw = FMath::FRandRange(-1.f, 1.f);
+	const float roll = FMath::FRandRange(-1.f, 1.f);
+
+	FVector randomPos = FVector(pitch, yaw, roll);
+	randomPos = randomPos.GetSafeNormal(distance);
+
+	FVector realSpawnPos = playerPos + randomPos;
+
 
 }
 
