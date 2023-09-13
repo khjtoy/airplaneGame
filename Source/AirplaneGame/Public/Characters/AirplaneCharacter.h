@@ -21,6 +21,7 @@ protected:
 
 	/** * Callbacks for Input */
 	void MoveForward(const FInputActionValue& Value);
+	void TurnPitch(const FInputActionValue& Value);
 
 # pragma region /* Input */
 	/* MappingContext */
@@ -30,6 +31,10 @@ protected:
 	/* MoveForward Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* MoveForwardAction;
+
+	/* TurnYaw Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* TurnPitchAction;
 #pragma endregion
 
 public:	
@@ -43,4 +48,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class UCameraComponent* tpsCamComp;
 
+private:
+	UPROPERTY(EditAnywhere)
+	float turnSpeed = 5.f;
+	UPROPERTY(EditAnywhere)
+	float minPitch = -80.f;
+	UPROPERTY(EditAnywhere)
+	float maxPitch = 80.f;
 };
