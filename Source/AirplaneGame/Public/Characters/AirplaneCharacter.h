@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 /* 추후 여기 경로 바꾸면 변경해야 함 */
-#include "C:\Program Files\UE_5.1\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\InputAction.h"
+#include "InputAction.h"
 #include "AirplaneCharacter.generated.h"
 
 UCLASS()

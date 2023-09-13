@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "EnemyBullet.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -48,5 +49,6 @@ void AEnemy::LookAtPlayer()
 void AEnemy::Fire()
 {
 	//투사체 발사
+	GetWorld()->SpawnActor<AEnemyBullet>(bulletFactory, firePos);
 }
 
