@@ -56,6 +56,8 @@ void AAirplaneCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	{
 		// MoveForward
 		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &AAirplaneCharacter::MoveForward);
+		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &AAirplaneCharacter::MoveForward);
+		EnhancedInputComponent->BindAction(TurnPitchAction, ETriggerEvent::Triggered, this, &AAirplaneCharacter::TurnPitch);
 	}
 }
 
@@ -78,5 +80,16 @@ void AAirplaneCharacter::MoveForward(const FInputActionValue& Value)
 		// add movement
 		AddMovementInput(ForwardDirection, Movement);
 	}
+}
+
+void AAirplaneCharacter::TurnPitch(const FInputActionValue& Value)
+{
+	float Turn = Value.Get<float>();
+	FRotator CurrentRotation = GetMesh()->GetRelativeRotation();
+
+	float pitchValue = FMath::Clamp(CurrentRotation.Pitch + (Turn * turnSpeed), minPitch, maxPitch);
+
+	FRotator NewRotation = FRotator(pitchValue, CurrentRotation.Yaw, CurrentRotation.Roll);
+	GetMesh()->SetRelativeRotation(NewRotation);
 }
 
