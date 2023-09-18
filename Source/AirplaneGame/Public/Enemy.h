@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+//#include "GameFramework/Actor.h"
+#include "GameFrameWork/Pawn.h"
 #include "Enemy.generated.h"
 
 UCLASS()
-class AIRPLANEGAME_API AEnemy : public AActor
+class AIRPLANEGAME_API AEnemy : public APawn
 {
 	GENERATED_BODY()
 public:

@@ -11,7 +11,7 @@ AEnemySpawn::AEnemySpawn()
 // Called when the game starts or when spawned
 void AEnemySpawn::BeginPlay()
 {
-	GetWorldTimerManager().SetTimer(spawnTimer, this, &AEnemySpawn::Spawner, 15, true);
+	GetWorldTimerManager().SetTimer(spawnTimer, this, &AEnemySpawn::Spawner, 3, true);
 }
 
 void AEnemySpawn::Spawner()
@@ -22,11 +22,13 @@ void AEnemySpawn::Spawner()
 	const float yaw = FMath::FRandRange(-1.f, 1.f);
 	const float roll = FMath::FRandRange(-1.f, 1.f);
 
-	FVector randomPos = FVector(pitch, yaw, roll);
-	randomPos = randomPos.GetSafeNormal(distance);
+	FVector randomPos = FVector(pitch, yaw, roll) * distance;
+	//randomPos = randomPos.GetSafeNormal(distance);
 
 	FVector realSpawnPos = playerPos + randomPos;
+	FRotator rotator;
+	FActorSpawnParameters spawnParam;
 
-
+	GetWorld()->SpawnActor<AActor>(enemy->GeneratedClass, realSpawnPos, rotator, spawnParam);
 }
 
