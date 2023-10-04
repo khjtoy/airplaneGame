@@ -23,6 +23,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = BodyMesh)
 		class UStaticMeshComponent* bodyMeshComp;
 public:
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void BulletMove();
 };

@@ -30,6 +30,7 @@ public:
 	virtual void RotateAround();
 	virtual void LookAtPlayer();
 	virtual void Fire();
+	virtual void GetHit();
 
 public:
 	FTimerHandle fireTimer;

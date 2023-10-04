@@ -12,7 +12,7 @@ AEnemySpawn::AEnemySpawn()
 // Called when the game starts or when spawned
 void AEnemySpawn::BeginPlay()
 {
-	GetWorldTimerManager().SetTimer(spawnTimer, this, &AEnemySpawn::Spawner, 3, true);
+	GetWorldTimerManager().SetTimer(spawnTimer, this, &AEnemySpawn::Spawner, 10, true);
 }
 
 void AEnemySpawn::Spawner()
