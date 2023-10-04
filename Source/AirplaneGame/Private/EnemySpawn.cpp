@@ -2,6 +2,7 @@
 
 
 #include "EnemySpawn.h"
+#include "Enemy.h"
 
 // Sets default values
 AEnemySpawn::AEnemySpawn()
@@ -20,15 +21,13 @@ void AEnemySpawn::Spawner()
 	
 	const float pitch = FMath::FRandRange(-1.f, 1.f);
 	const float yaw = FMath::FRandRange(-1.f, 1.f);
-	const float roll = FMath::FRandRange(-1.f, 1.f);
 
-	FVector randomPos = FVector(pitch, yaw, roll) * distance;
-	//randomPos = randomPos.GetSafeNormal(distance);
+	FVector randomPos = FVector(pitch, yaw, 0.f) * distance;
 
 	FVector realSpawnPos = playerPos + randomPos;
 	FRotator rotator;
 	FActorSpawnParameters spawnParam;
 
-	GetWorld()->SpawnActor<AActor>(enemy->GeneratedClass, realSpawnPos, rotator, spawnParam);
+	GetWorld()->SpawnActor<AEnemy>(enemy, realSpawnPos, rotator, spawnParam);
 }
 

@@ -26,6 +26,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = variables)
 		float distance = 1.f;
 	UPROPERTY(EditDefaultsOnly, Category = enemy)
-		UBlueprint* enemy;
+		TSubclassOf<class AEnemy> enemy;
 	FTimerHandle spawnTimer;
 };
