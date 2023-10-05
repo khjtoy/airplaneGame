@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ABullet.h"
+#include "Animation/AnimInstance.h"
 #include "PlayerGun.generated.h"
 
 UCLASS()
@@ -19,8 +21,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	USkeletalMeshComponent* SkeletalMeshComponent;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void Fire();
 
+	UPROPERTY(EditDefaultsOnly, Category = Guns)
+	TSubclassOf<class AABullet> bulletFactory;
+
+	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UAnimMontage* GunFireAnimMontage;
+
+	UAnimInstance* AnimInstance;	
 };
