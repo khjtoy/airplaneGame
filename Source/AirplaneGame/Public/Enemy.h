@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFrameWork/Pawn.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -14,7 +15,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
 		TSubclassOf<class AEnemyBullet> bulletFactory;
 	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
-		FTransform firePos;
+		FVector firePos;
 public:	
 	// Sets default values for this actor's properties
 	AEnemy();
@@ -29,7 +30,10 @@ public:
 	virtual void RotateAround();
 	virtual void LookAtPlayer();
 	virtual void Fire();
+	virtual void GetHit();
 
 public:
 	FTimerHandle fireTimer;
+	FTimerHandle rotateTimer;
+	FTimerHandle lookAtTimer;
 };

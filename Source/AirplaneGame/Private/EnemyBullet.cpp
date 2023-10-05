@@ -2,8 +2,10 @@
 
 
 #include "EnemyBullet.h"
+#include "Characters/AirplaneCharacter.h"
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AEnemyBullet::AEnemyBullet()
@@ -44,5 +46,15 @@ void AEnemyBullet::Tick(float DeltaTime)
 void AEnemyBullet::BulletMove()
 {
     movementComp->Velocity = GetActorForwardVector();
+}
+
+void AEnemyBullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+    if (Other->IsA<AAirplaneCharacter>())
+    {
+        UE_LOG(LogTemp, Log, TEXT("HI"));
+        //Cast<AAirplaneCharacter>(Other)->
+        Destroy();
+    }
 }
 
