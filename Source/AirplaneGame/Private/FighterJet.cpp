@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "FighterJet.h"
 /* 추후 여기 경로 바꾸면 변경해야 함 */
-#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
-#include "C:/Program Files/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include "EnhancedInput/Public/EnhancedInputSubsystems.h"
+#include "EnhancedInput/Public/EnhancedInputComponent.h"
 #include <Math/UnrealMathUtility.h>
 #include "Kismet/KismetMathLibrary.h"
 #include <GameFramework/SpringArmComponent.h>
