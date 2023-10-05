@@ -15,22 +15,31 @@ void APlayerGun::BeginPlay()
 	Super::BeginPlay();
 	SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>();
 	if(SkeletalMeshComponent) AnimInstance = SkeletalMeshComponent->GetAnimInstance();
+	CoolTime = 0;
 }
 
 // Called every frame
 void APlayerGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (CoolTime > 0)
+	{
+		CoolTime -= DeltaTime;
+	}
 }
 
 void APlayerGun::Fire()
 {
-	if (SkeletalMeshComponent && GunFireAnimMontage)
+	if (CoolTime <= 0)
 	{
-		FTransform firePosition = SkeletalMeshComponent->GetSocketTransform(TEXT("FirePosition"));
-		AABullet* bullet = GetWorld()->SpawnActor<AABullet>(bulletFactory, firePosition);
-		bullet->SetActorRotation(SkeletalMeshComponent->GetComponentRotation());
-		AnimInstance->Montage_Play(GunFireAnimMontage);
+		if (SkeletalMeshComponent && GunFireAnimMontage)
+		{
+			FTransform firePosition = SkeletalMeshComponent->GetSocketTransform(TEXT("FirePosition"));
+			AABullet* bullet = GetWorld()->SpawnActor<AABullet>(bulletFactory, firePosition);
+			bullet->SetActorRotation(SkeletalMeshComponent->GetComponentRotation());
+			AnimInstance->Montage_Play(GunFireAnimMontage);
+		}
+		CoolTime = 3;
 	}
 }
 

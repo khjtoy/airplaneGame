@@ -9,6 +9,8 @@
 #include "PlayerGun.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include <Components/SphereComponent.h>
+#include "FighterJet.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -16,10 +18,8 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	FPSViewVec = FVector(28, 5, 70);
-	TPSViewVec = FVector(-220, 5, 220);
 
 	FPSViewRot = FRotator(0, 0, 0);
-	TPSViewRot = FRotator(0, -35, 0);
 
 	fpsCameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamComp"));
 	if (fpsCameraComp)
@@ -28,6 +28,10 @@ APlayerCharacter::APlayerCharacter()
 		fpsCameraComp->SetRelativeLocation(FPSViewVec);
 		fpsCameraComp->SetRelativeRotation(FPSViewRot);
 	}
+
+	collisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
+	collisionComp->SetCollisionProfileName(TEXT("BlockALL"));
+	collisionComp->SetSphereRadius(30);
 }
 
 bool APlayerCharacter::IsFalling()
@@ -47,9 +51,13 @@ void APlayerCharacter::BeginPlay()
 	isSettingStarted = false;
 	isCanMove = false;
 	isMoveForwardnow = false;
-	APPlayer = GetWorld()->GetFirstPlayerController();
+	fallingRemainingTime = 0;
+
+	APPlayer = UGameplayStatics::GetPlayerController(this, 0);
+
+	UE_LOG(LogTemp, Log, TEXT("Controller :: %s"), *UGameplayStatics::GetPlayerController(this, 0)->GetName());
+
 	fallingSpeed = 1;
-	ChangeGravity(1);
 
 	FTransform firePosition = GetMesh()->GetSocketTransform(TEXT("GunPosition"));
 	gun = GetWorld()->SpawnActor<APlayerGun>(GunFactory, firePosition);
@@ -57,41 +65,54 @@ void APlayerCharacter::BeginPlay()
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	gun->AttachToComponent(GetMesh(), AttachRules);
 	gun->SetActorLocation(firePosition.GetTranslation());
+
 }
 
 void APlayerCharacter::ChangeGravity(float Value)
 {
-	UCharacterMovementComponent* characterMovement = APPlayer->GetCharacter()->GetCharacterMovement();
+	UCharacterMovementComponent* characterMovement = GetController()->GetCharacter()->GetCharacterMovement();
 	characterMovement->GravityScale = Value;
 }
 
-void APlayerCharacter::PlayerGlide(const FInputActionValue& Value)
+void APlayerCharacter::PlayerGlide()
 {
-	GetController()->GetPawn()->bUseControllerRotationPitch = false;
-	GetController()->GetPawn()->SetActorRotation(FRotator::ZeroRotator);
 	if (!isSettingStarted) return;
+	fallingRemainingTime = 0;
 	isCanMove = true;
 	isSettingStarted = false;
 	ChangeGravity(0);
 	fallingSpeed = 1;
 	GetCharacterMovement()->Velocity = FVector::ZeroVector;
-	fpsCameraComp->SetRelativeLocation(TPSViewVec);
-	fpsCameraComp->SetRelativeRotation(TPSViewRot);
 }
 
-void APlayerCharacter::PlayerPositionSetting(const FInputActionValue& Value)
+void APlayerCharacter::PlayerPositionSetting()
 {
-	APawn* pawn = APPlayer->GetPawn();
-	GetController()->GetPawn()->bUseControllerRotationPitch = true;
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	PlayerController->EnableInput(PlayerController);
+	//UE_LOG(LogTemp, Log, TEXT("Controller : %s"), *UGameplayStatics::GetPlayerController(this, 0)->GetName());
+
+	thisContorller = GetController();
+	APawn* pawn = thisContorller->GetPawn();
+
 	if (isSettingStarted) return;
 	isCanMove = false;
+	fallingTime = 0;
 	isSettingStarted = true;
+
 	ChangeGravity(1);
-	FVector lauchVec = pawn->GetActorUpVector() * 2500;
+	FVector lauchVec = pawn->GetActorUpVector() * 4000;
 	LaunchCharacter(lauchVec, true, true);
 
 	fpsCameraComp->SetRelativeLocation(FPSViewVec);
 	fpsCameraComp->SetRelativeRotation(FPSViewRot);
+
+	gun->SetActorHiddenInGame(false);
+	gun->SetActorEnableCollision(true);
+}
+
+void APlayerCharacter::Die()
+{
+	UE_LOG(LogTemp, Log, TEXT("Die"));
 }
 
 void APlayerCharacter::TurnPitch(const FInputActionValue& Value)
@@ -111,14 +132,13 @@ void APlayerCharacter::MoveForward(const FInputActionValue& Value)
 	if (!isCanMove) return;
 	float Movement = Value.Get<float>();
 	isMoveForwardnow = true;
-	FVector DeltaLocation = FVector(Movement * 4000 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f, 0.0f);
+	FVector DeltaLocation = FVector(Movement * 500 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f, 0.0f);
 	AddActorLocalOffset(DeltaLocation, true);
 }
 
 void APlayerCharacter::StopMoveForward()
 {
 	isMoveForwardnow = false;
-	
 }
 
 void APlayerCharacter::MoveRight(const FInputActionValue& Value)
@@ -126,7 +146,7 @@ void APlayerCharacter::MoveRight(const FInputActionValue& Value)
 	if (!isCanMove) return;
 	float Movement = Value.Get<float>();
 
-	FVector DeltaLocation = FVector(0.0f, Movement * 1500 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f);
+	FVector DeltaLocation = FVector(0.0f, Movement * 450 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f);
 	AddActorLocalOffset(DeltaLocation, true);
 }
 
@@ -145,23 +165,31 @@ void APlayerCharacter::FireGun()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	if (isSettingStarted)
 	{
-		FVector vec = GetCharacterMovement()->Velocity;
-		UE_LOG(LogTemp, Log, TEXT("Velocity : %s"), *vec.ToString());
+		fallingTime += DeltaTime;
+		if (fallingTime >= 4)
+		{
+			PlayerGlide();
+		}
 	}
 
 	if (isCanMove)
 	{
-		FMath::Clamp(fallingSpeed += 9.8f + DeltaTime * 10, 0, 100);
+		FMath::Clamp(fallingSpeed += 9.8f + DeltaTime * 100, 0, 100);
 		float Speed = fallingSpeed;
-		if (isMoveForwardnow) Speed = fallingSpeed * 0.8f;
+		if (isMoveForwardnow) Speed = fallingSpeed * 0.9f;
 
 		FVector DeltaLocation = FVector(0, 0, -1 * Speed * DeltaTime);
 		AddActorWorldOffset(DeltaLocation, true);
-	}
 
+		fallingRemainingTime += DeltaTime;
+		if (fallingRemainingTime > 5)
+		{
+			Die();
+			fallingRemainingTime = 0;
+		}
+	}
 }
 
 
@@ -190,5 +218,25 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &APlayerCharacter::FireGun);
 	}
+}
 
+void APlayerCharacter::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (!isCanMove) return;
+	isCanMove = false;
+	if (Other->IsA<AFighterJet>())
+	{
+		thisContorller->GetPawn()->SetActorRotation(FRotator::ZeroRotator);
+
+		thisContorller->UnPossess();
+		thisContorller->Possess(Cast<ACharacter>(Other));
+
+		this->SetActorHiddenInGame(true);
+		this->SetActorEnableCollision(false);
+
+		gun->SetActorHiddenInGame(true);
+		gun->SetActorEnableCollision(false);
+
+		Cast<ACharacter>(Other)->SetupPlayerInputComponent(Cast<ACharacter>(Other)->InputComponent);
+	}
 }

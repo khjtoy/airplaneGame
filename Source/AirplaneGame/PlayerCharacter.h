@@ -22,14 +22,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Bool")
 	bool IsGliding();
 
+	void PlayerPositionSetting();
+	void Die();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void ChangeGravity(float Value);
 
-	void PlayerGlide(const FInputActionValue& Value);
-	void PlayerPositionSetting(const FInputActionValue& Value);
+	void PlayerGlide();
 	void TurnPitch(const FInputActionValue& Value);
 	void TurnYaw(const FInputActionValue& Value);
 	void MoveForward(const FInputActionValue& Value);
@@ -45,6 +46,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
 private:
 	APlayerController* APPlayer;
@@ -63,6 +66,8 @@ private:
 	FVector RightVec;
 
 	float fallingSpeed;
+	float fallingTime;
+	float fallingRemainingTime;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -99,4 +104,10 @@ public:
 	class UAnimMontage* PlayerFireAnimMontage;
 
 	APlayerGun* gun;
+
+	UPROPERTY(VisibleAnywhere, Category = Collision)
+	class USphereComponent* collisionComp;
+
+	AController* thisContorller;
+
 };

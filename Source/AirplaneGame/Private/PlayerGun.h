@@ -22,6 +22,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	float CoolTime;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

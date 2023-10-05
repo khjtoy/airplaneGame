@@ -2,6 +2,7 @@
 
 
 #include "ABullet.h"
+#include "Enemy.h"
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
 
@@ -17,9 +18,9 @@ AABullet::AABullet()
 	RootComponent = collisionComp;
 	movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
 	movementComp->SetUpdatedComponent(collisionComp);
-	movementComp->InitialSpeed = 5000;
-	movementComp->MaxSpeed = 5000;
-	movementComp->ProjectileGravityScale = 0.01f;
+	movementComp->InitialSpeed = 6500;
+	movementComp->MaxSpeed = 6500;
+	movementComp->ProjectileGravityScale = 0.0f;
 	movementComp->bShouldBounce = false;
 }
 
@@ -38,5 +39,15 @@ void AABullet::Tick(float DeltaTime)
 
 void AABullet::Die()
 {
+
+}
+
+void AABullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Log, TEXT("Bullet : %s"), *Other->GetName());
+	if (Other->IsA<AEnemy>())
+	{
+		Cast<AEnemy>(Other)->GetHit();
+	}
 }
 

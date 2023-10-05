@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 AFighterJet::AFighterJet()
 {
@@ -29,12 +30,20 @@ AFighterJet::AFighterJet()
 		springArmComp->TargetArmLength = 2500;
 		springArmComp->SocketOffset = FVector(0, 0, 350);
 	}
+
 	// 카메라 컴포넌트를 붙이기
 	tpsCamComp = CreateDefaultSubobject<UCameraComponent>(TEXT("TPSCamComp"));
 	if (tpsCamComp)
 	{
 		tpsCamComp->SetupAttachment(springArmComp);
 	}
+
+
+}
+
+void AFighterJet::SetInput()
+{
+	SetupPlayerInputComponent(thisContorller->InputComponent);
 }
 
 void AFighterJet::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -69,6 +78,8 @@ void AFighterJet::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(LookUpAction, ETriggerEvent::Triggered, this, &AFighterJet::LookUp);
 		// Turn
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &AFighterJet::Turn);
+		// Change Character view
+		EnhancedInputComponent->BindAction(ChangePlayerAction, ETriggerEvent::Triggered, this, &AFighterJet::ChangePlayer);
 	}
 }
 
@@ -78,6 +89,22 @@ void AFighterJet::BeginPlay()
 
 	// 이륙하기 전, 최소속도로 설정
 	TargetThrustSpd = MinimumThrustSpd;
+	thisContorller = GetController();
+	if (thisContorller)
+	{
+		playerCharacter = GetWorld()->SpawnActor<ACharacter>(playerCharacterClass);
+		playerCharacter->SetActorLocation(thisContorller->GetPawn()->GetActorLocation());
+		FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+		playerCharacter->AttachToComponent(GetMesh(), AttachRules);
+		playerCharacter->AddActorLocalOffset(FVector::UpVector * 500);
+
+		playerCharacter->SetActorHiddenInGame(true);
+		playerCharacter->SetActorEnableCollision(false);
+
+		UE_LOG(LogTemp, Log, TEXT("Controller"));
+	}
+	else
+		UE_LOG(LogTemp, Log, TEXT("Null"));
 }
 
 void AFighterJet::Tick(float DeltaTime)
@@ -189,7 +216,6 @@ void AFighterJet::Turn(const FInputActionValue& Value)
 		FlightTurn = FlightTurn * GetWorld()->DeltaTimeSeconds * FlightTurnRate;
 
 		AddActorLocalRotation(FRotator(0.f, 0.f, Value.Get<float>()));
-
 		BackRudderRotation = FRotator(0.f, UKismetMathLibrary::MapRangeClamped(Value.Get<float>(), -1.f, 1.f, RudderRotationMax, RudderRotationMax * -1.f), 0.f);
 	}
 	else
@@ -198,9 +224,24 @@ void AFighterJet::Turn(const FInputActionValue& Value)
 	}
 }
 
+void AFighterJet::ChangePlayer()
+{
+	if (playerCharacter)
+	{
+		thisContorller->UnPossess();
+		thisContorller->Possess(playerCharacter);
+		playerCharacter->SetupPlayerInputComponent(playerCharacter->InputComponent);
+
+		APlayerCharacter* player = static_cast<APlayerCharacter*>(playerCharacter);
+		player->SetActorHiddenInGame(false);
+		player->SetActorEnableCollision(true);
+
+		player->PlayerPositionSetting();
+	}
+}
+
 void AFighterJet::AddFlightMovement()
 {
 	CurrentThrustSpd = FMath::FInterpTo(CurrentThrustSpd, TargetThrustSpd, GetWorld()->DeltaTimeSeconds, 8.0f);
-
 	AddActorWorldOffset(GetMesh()->GetForwardVector() * (CurrentThrustSpd * GetWorld()->DeltaTimeSeconds), true);
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AirplaneGame/PlayerCharacter.h"
 /* 추후 여기 경로 바꾸면 변경해야 함 */
 #include "C:\Program Files\UE_5.1\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\InputAction.h"
 #include "FighterJet.generated.h"
@@ -15,6 +16,7 @@ class AIRPLANEGAME_API AFighterJet : public ACharacter
 
 public:
 	AFighterJet();
+	void SetInput();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 protected:
@@ -43,6 +45,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = MeshTransforms)
 	float RudderRotationMax = 25.f;
+
+	UPROPERTY(EditAnywhere, Category = PlayerClass)
+	TSubclassOf<APlayerCharacter> playerCharacterClass;
+
+	AController* thisContorller;
+
+	ACharacter* playerCharacter;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Speed)
 	float TargetThrustSpd;
@@ -84,6 +94,7 @@ protected:
 	void StopSpaceBar(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
+	void ChangePlayer();
 
 # pragma region /* Input */
 	/* MappingContext */
@@ -109,6 +120,10 @@ protected:
 	/* Turn Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* TurnAction;
+
+	/* PlayerJump Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* ChangePlayerAction;
 #pragma endregion
 private:
 	void AddFlightMovement();
