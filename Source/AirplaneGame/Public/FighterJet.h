@@ -43,6 +43,11 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = MeshTransforms)
 	float RudderRotationMax = 25.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = AirplaneUI)
+	TSubclassOf<class UUserWidget> AirplaneUIFactory;
+
+	class UUserWidget* AirplaneUI;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Speed)
 	float TargetThrustSpd;
