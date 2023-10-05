@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "PlayerGun.h"
+
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
-class AIRPLANEGAME_API APlayerCharacter : public ACharacter
+class APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 

@@ -139,7 +139,6 @@ void APlayerCharacter::FireGun()
 		gun->Fire();
 		PlayAnimMontage(PlayerFireAnimMontage);
 	}
-	
 }
 
 // Called every frame
@@ -165,7 +164,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 }
 
-}
 
 // Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -183,15 +181,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 	if (EnhancedInputComponent)
 	{
-		EnhancedInputComponent->BindAction(PlayerSetUpAction, ETriggerEvent::Started, this,&APlayerCharacter::PlayerPositionSetting);
-		EnhancedInputComponent->BindAction(GlideAction, ETriggerEvent::Started, this,&APlayerCharacter::PlayerGlide);
-		EnhancedInputComponent->BindAction(TurnPitchAction, ETriggerEvent::Triggered, this,&APlayerCharacter::TurnPitch);
-		EnhancedInputComponent->BindAction(TurnYawAction, ETriggerEvent::Triggered, this,&APlayerCharacter::TurnYaw);
-		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this,&APlayerCharacter::MoveForward);
-		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Completed, this,&APlayerCharacter::StopMoveForward);
-		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this,&APlayerCharacter::MoveRight);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this,&APlayerCharacter::FireGun);
+		EnhancedInputComponent->BindAction(PlayerSetUpAction, ETriggerEvent::Started, this, &APlayerCharacter::PlayerPositionSetting);
+		EnhancedInputComponent->BindAction(GlideAction, ETriggerEvent::Started, this, &APlayerCharacter::PlayerGlide);
+		EnhancedInputComponent->BindAction(TurnPitchAction, ETriggerEvent::Triggered, this, &APlayerCharacter::TurnPitch);
+		EnhancedInputComponent->BindAction(TurnYawAction, ETriggerEvent::Triggered, this, &APlayerCharacter::TurnYaw);
+		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Completed, this, &APlayerCharacter::StopMoveForward);
+		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &APlayerCharacter::FireGun);
 	}
 
 }
-
