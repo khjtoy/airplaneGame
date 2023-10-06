@@ -19,14 +19,14 @@ void AEnemy::BeginPlay()
 {
 	//5초 간격으로 Fire 실행
 	GetWorldTimerManager().SetTimer(fireTimer, this, &AEnemy::Fire, 3, true);
-	GetWorldTimerManager().SetTimer(rotateTimer, this, &AEnemy::RotateAround, 1, true);
+	GetWorldTimerManager().SetTimer(moveTimer, this, &AEnemy::MoveToPlayer, 0.01f, true);
 	GetWorldTimerManager().SetTimer(lookAtTimer, this, &AEnemy::LookAtPlayer, 0.01f, true);
 }
 
-void AEnemy::RotateAround()
+void AEnemy::MoveToPlayer()
 {
-	//비행기 주위로 회전하기
-
+	FVector playerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	SetActorLocation(FMath::VInterpTo(GetActorLocation(), playerPos, GetWorld()->GetDeltaSeconds(), 5));
 }
 
 void AEnemy::LookAtPlayer()
@@ -47,6 +47,7 @@ void AEnemy::Fire()
 void AEnemy::GetHit()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), deathExp, GetActorLocation(), FRotator(0, 0, 0));
-	Destroy();
+	this->SetActorHiddenInGame(true);
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }
 

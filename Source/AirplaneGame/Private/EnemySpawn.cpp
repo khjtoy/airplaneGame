@@ -19,15 +19,18 @@ void AEnemySpawn::Spawner()
 {
 	FVector playerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	
-	const float pitch = FMath::FRandRange(-1.f, 1.f);
-	const float yaw = FMath::FRandRange(-1.f, 1.f);
+	for (int i = 0; i < 3; i++)
+	{
+		const float pitch = FMath::FRandRange(-1.f, 1.f);
+		const float yaw = FMath::FRandRange(-1.f, 1.f);
 
-	FVector randomPos = FVector(pitch, yaw, 0.f) * distance;
+		FVector randomPos = FVector(pitch, yaw, 0.f) * distance;
 
-	FVector realSpawnPos = playerPos + randomPos;
-	FRotator rotator;
-	FActorSpawnParameters spawnParam;
+		FVector realSpawnPos = playerPos + randomPos;
+		FRotator rotator;
+		FActorSpawnParameters spawnParam;
 
-	GetWorld()->SpawnActor<AEnemy>(enemy, realSpawnPos, rotator, spawnParam);
+		GetWorld()->SpawnActor<AEnemy>(enemy, realSpawnPos, rotator, spawnParam);
+	}
 }
 
