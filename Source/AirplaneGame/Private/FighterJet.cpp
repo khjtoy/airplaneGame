@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
+#include <Blueprint/UserWidget.h>
 
 AFighterJet::AFighterJet()
 {
@@ -78,6 +79,10 @@ void AFighterJet::BeginPlay()
 
 	// 이륙하기 전, 최소속도로 설정
 	TargetThrustSpd = MinimumThrustSpd;
+
+	AirplaneUI = CreateWidget(GetWorld(), AirplaneUIFactory);
+
+	AirplaneUI->AddToViewport();
 }
 
 void AFighterJet::Tick(float DeltaTime)
