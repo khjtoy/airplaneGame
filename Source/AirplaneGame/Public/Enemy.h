@@ -28,13 +28,14 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void RotateAround();
+	virtual void MoveToPlayer();
 	virtual void LookAtPlayer();
 	virtual void Fire();
 	virtual void GetHit();
 
 public:
+	float speed = 1500.f;
 	FTimerHandle fireTimer;
-	FTimerHandle rotateTimer;
+	FTimerHandle moveTimer;
 	FTimerHandle lookAtTimer;
 };
