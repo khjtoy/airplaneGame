@@ -26,7 +26,7 @@ void AEnemy::BeginPlay()
 void AEnemy::MoveToPlayer()
 {
 	FVector playerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	SetActorLocation(FMath::VInterpTo(GetActorLocation(), playerPos, GetWorld()->GetDeltaSeconds(), 5));
+	SetActorLocation(FMath::VInterpTo(GetActorLocation(), playerPos, GetWorld()->GetDeltaSeconds(), 0.3f));
 }
 
 void AEnemy::LookAtPlayer()

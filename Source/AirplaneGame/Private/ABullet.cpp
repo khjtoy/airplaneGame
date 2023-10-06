@@ -50,7 +50,11 @@ void AABullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveC
 	if (Other->IsA<AEnemy>())
 	{
 		Cast<AEnemy>(Other)->GetHit();
-		Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(this, 0))->SetScore();
+		//Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(this, 0))->SetScore();
+		if (GetWorld()->GetFirstPlayerController()->GetPawn()->IsA<APlayerCharacter>())
+		{
+			Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->SetScore();
+		}
 	}
 }
 

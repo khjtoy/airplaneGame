@@ -143,7 +143,7 @@ void APlayerCharacter::MoveForward(const FInputActionValue& Value)
 	if (!isCanMove) return;
 	float Movement = Value.Get<float>();
 	isMoveForwardnow = true;
-	FVector DeltaLocation = FVector(Movement * 500 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f, 0.0f);
+	FVector DeltaLocation = FVector(Movement * 800 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f, 0.0f);
 	AddActorLocalOffset(DeltaLocation, true);
 }
 
@@ -157,19 +157,21 @@ void APlayerCharacter::MoveRight(const FInputActionValue& Value)
 	if (!isCanMove) return;
 	float Movement = Value.Get<float>();
 
-	FVector DeltaLocation = FVector(0.0f, Movement * 450 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f);
+	FVector DeltaLocation = FVector(0.0f, Movement * 600 * UGameplayStatics::GetWorldDeltaSeconds(this), 0.0f);
 	AddActorLocalOffset(DeltaLocation, true);
 }
 
 void APlayerCharacter::FireGun()
 {
-	if (isCanMove) return;
-
-	if (gun)
+	if (fallingRemainingTime > 0 || !isCanMove)
 	{
-		gun->Fire();
-		PlayAnimMontage(PlayerFireAnimMontage);
+		if (gun)
+		{
+			gun->Fire();
+			PlayAnimMontage(PlayerFireAnimMontage);
+		}
 	}
+
 }
 
 // Called every frame
@@ -195,7 +197,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		AddActorWorldOffset(DeltaLocation, true);
 
 		fallingRemainingTime += DeltaTime;
-		if (fallingRemainingTime > 5)
+		if (fallingRemainingTime > 9)
 		{
 			Die();
 			fallingRemainingTime = 0;
