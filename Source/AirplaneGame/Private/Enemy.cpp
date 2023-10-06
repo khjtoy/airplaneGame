@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "EnemyBullet.h"
+#include "Particles/ParticleSystem.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AEnemy::AEnemy()
@@ -21,17 +23,10 @@ void AEnemy::BeginPlay()
 	GetWorldTimerManager().SetTimer(lookAtTimer, this, &AEnemy::LookAtPlayer, 0.01f, true);
 }
 
-// Called every frame
-void AEnemy::Tick(float DeltaTime)
-{
-	//ToDO ::
-	//비행기 주위로 회전하기
-	//HP가 0이 될 시(아마 1방일수도 있음) 폭발 이펙트 나오면서 동시에 visible false
-}
-
 void AEnemy::RotateAround()
 {
 	//비행기 주위로 회전하기
+
 }
 
 void AEnemy::LookAtPlayer()
@@ -51,6 +46,7 @@ void AEnemy::Fire()
 
 void AEnemy::GetHit()
 {
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), deathExp, GetActorLocation(), FRotator(0, 0, 0));
 	Destroy();
 }
 

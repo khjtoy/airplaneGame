@@ -3,6 +3,7 @@
 
 #include "EnemyBullet.h"
 #include "AirplaneGame/PlayerCharacter.h"
+#include "FighterJet.h"
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -52,8 +53,14 @@ void AEnemyBullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 {
     if (Other->IsA<APlayerCharacter>())
     {
-        UE_LOG(LogTemp, Log, TEXT("HI"));
-        //Cast<AAirplaneCharacter>(Other)->
+        //Cast<APlayerCharacter>(Other)->
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation(), FRotator(0, 0, 0));
+        Destroy();
+    }
+
+    else if (Other->IsA<AFighterJet>())
+    {
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation(), FRotator(0, 0, 0));
         Destroy();
     }
 }

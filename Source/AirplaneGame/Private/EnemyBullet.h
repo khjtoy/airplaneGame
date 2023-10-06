@@ -22,6 +22,8 @@ public:
 	// 외관 컴포넌트
 	UPROPERTY(VisibleAnywhere, Category = BodyMesh)
 		class UStaticMeshComponent* bodyMeshComp;
+	UPROPERTY(EditDefaultsOnly, Category = DieEffect)
+		UParticleSystem* explosion;
 public:
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 	virtual void Tick(float DeltaTime) override;

@@ -16,6 +16,8 @@ public:
 		TSubclassOf<class AEnemyBullet> bulletFactory;
 	UPROPERTY(EditDefaultsOnly, Category = BulletFactory)
 		FVector firePos;
+	UPROPERTY(EditDefaultsOnly, Category = DieEffect)
+		UParticleSystem* deathExp;
 public:	
 	// Sets default values for this actor's properties
 	AEnemy();
@@ -26,7 +28,6 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	virtual void RotateAround();
 	virtual void LookAtPlayer();
 	virtual void Fire();
