@@ -124,6 +124,11 @@ protected:
 	/* PlayerJump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* ChangePlayerAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = AirplaneUI)
+		TSubclassOf<class UUserWidget> AirplaneUIFactory;
+
+	class UUserWidget* AirplaneUI;
 #pragma endregion
 private:
 	void AddFlightMovement();

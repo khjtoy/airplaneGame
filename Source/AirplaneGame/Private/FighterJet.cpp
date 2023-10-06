@@ -8,6 +8,7 @@
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include <Blueprint/UserWidget.h>
 
 AFighterJet::AFighterJet()
 {
@@ -101,10 +102,14 @@ void AFighterJet::BeginPlay()
 		playerCharacter->SetActorHiddenInGame(true);
 		playerCharacter->SetActorEnableCollision(false);
 
+
 		UE_LOG(LogTemp, Log, TEXT("Controller"));
 	}
 	else
 		UE_LOG(LogTemp, Log, TEXT("Null"));
+
+	AirplaneUI = CreateWidget(GetWorld(), AirplaneUIFactory);
+	AirplaneUI->AddToViewport();
 }
 
 void AFighterJet::Tick(float DeltaTime)

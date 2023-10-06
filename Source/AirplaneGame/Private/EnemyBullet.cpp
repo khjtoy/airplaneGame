@@ -53,9 +53,8 @@ void AEnemyBullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 {
     if (Other->IsA<APlayerCharacter>())
     {
-        //Cast<APlayerCharacter>(Other)->
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosion, GetActorLocation(), FRotator(0, 0, 0));
-        Destroy();
+        Cast<APlayerCharacter>(Other)->Die();
     }
 
     else if (Other->IsA<AFighterJet>())

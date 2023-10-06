@@ -39,7 +39,7 @@ void APlayerGun::Fire()
 			bullet->SetActorRotation(SkeletalMeshComponent->GetComponentRotation());
 			AnimInstance->Montage_Play(GunFireAnimMontage);
 		}
-		CoolTime = 3;
+		CoolTime = 2;
 	}
 }
 

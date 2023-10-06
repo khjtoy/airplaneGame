@@ -113,6 +113,7 @@ void APlayerCharacter::PlayerPositionSetting()
 void APlayerCharacter::Die()
 {
 	UE_LOG(LogTemp, Log, TEXT("Die"));
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("AirplaneTest"));
 }
 
 void APlayerCharacter::TurnPitch(const FInputActionValue& Value)
