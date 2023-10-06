@@ -65,7 +65,7 @@ void APlayerCharacter::BeginPlay()
 	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
 	gun->AttachToComponent(GetMesh(), AttachRules);
 	gun->SetActorLocation(firePosition.GetTranslation());
-
+	Score = 0;
 }
 
 void APlayerCharacter::ChangeGravity(float Value)
@@ -114,6 +114,16 @@ void APlayerCharacter::Die()
 {
 	UE_LOG(LogTemp, Log, TEXT("Die"));
 	UGameplayStatics::OpenLevel(GetWorld(), TEXT("AirplaneTest"));
+}
+
+void APlayerCharacter::SetScore()
+{
+	Score += 100;
+}
+
+int APlayerCharacter::GetScore()
+{
+	return Score;
 }
 
 void APlayerCharacter::TurnPitch(const FInputActionValue& Value)

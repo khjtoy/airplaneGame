@@ -24,6 +24,14 @@ public:
 
 	void PlayerPositionSetting();
 	void Die();
+
+	void SetScore();
+
+	UFUNCTION(BlueprintCallable, Category = "Score")
+	int GetScore();
+
+	int Score;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

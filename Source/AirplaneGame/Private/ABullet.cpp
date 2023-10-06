@@ -3,8 +3,10 @@
 
 #include "ABullet.h"
 #include "Enemy.h"
+#include "AirplaneGame/PlayerCharacter.h"
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AABullet::AABullet()
@@ -48,6 +50,7 @@ void AABullet::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveC
 	if (Other->IsA<AEnemy>())
 	{
 		Cast<AEnemy>(Other)->GetHit();
+		Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(this, 0))->SetScore();
 	}
 }
 
